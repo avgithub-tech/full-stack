@@ -2,7 +2,7 @@ import React from 'react'
 import '../css/signin.scss'
 import FormInput from './FormInput'
 import CutomButton from './CustomButton'
-import {signInWithGoogle} from '../firebase/firebaseUtil'
+import {auth, signInWithGoogle} from '../firebase/firebaseUtil'
 
 class SignIn extends React.Component{
 
@@ -15,9 +15,20 @@ class SignIn extends React.Component{
         }
     }
 
-    handleSubmit = (event) => {
+    handleSubmit = async event => {
         event.preventDefault();
-        this.setState({email:'', password:''});
+
+        const {email, password} = this.state;
+
+        try{
+            await auth.signInWithEmailAndPassword(email, password);
+            this.setState({email:'', password:''});
+        }
+        catch(error){
+            console.log(error);
+        }
+
+        
     }
 
     handleChange = (event) => {
@@ -42,7 +53,7 @@ class SignIn extends React.Component{
                     
 
                     <div className='buttons'>
-                        <CutomButton type='submit'>Sign In</CutomButton>
+                        <CutomButton type='button'>Sign In</CutomButton>
                         <CutomButton onClick={signInWithGoogle} isGoogleSignIn>
                             {' '}Sign In With Google{' '}
                         </CutomButton>
